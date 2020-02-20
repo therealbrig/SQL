@@ -1,0 +1,50 @@
+CONCATENATE:
+=Fields!FieldA.Value &"  "& Fields!FieldB.Value & "  "& Fields!FieldC.Value.ToString()
+
+From <https://social.msdn.microsoft.com/Forums/sqlserver/en-US/0d8b8f53-883b-43b1-b023-b20eda88c2e9/concatenation-in-ssrs-throws-error?forum=sqlreportingservices> 
+
+
+DISPLAY ALL SELECTED PARAMETERS SEPARATED BY COMMAS:
+=Join(Parameters!Product.Label, ",")
+
+From <https://stackoverflow.com/questions/300339/display-parametermulti-value-in-report> 
+
+
+Chart Keyword	Description	Applicable to Chart Type	Example of an Equivalent Simple Expression
+#VALY	Y value of the data point.	All	=Fields!MyDataField.Value
+#VALY2	Y value #2 of data point.	Range, Bubble	None
+#VALY3	Y value #3 of data point.	Stock, Candlestick	None
+#VALY4	Y value #4 of data point.	Stock, Candlestick	None
+#SERIESNAME	Series name.	All	None
+#LABEL	Data point label.	All	None
+#AXISLABEL	Axis data point label.	Shape	=Fields!MyDataField.Value
+#INDEX	Data point index.	All	None
+#PERCENT	Percentage of the data point Y value.	All	=FormatPercent(Fields!MyDataField.Value/Sum(Fields!MyDataField.Value, "MyDataSet"),2)
+#TOTAL	Total of all Y values in the series.	All	=Sum(Fields!MyDataField.Value)
+#LEGENDTEXT	The text that corresponds to the text of the legend item.	All	None
+#AVG	Average of all Y values in the series.	All	=Avg(Fields!MyDataField.Value)
+#MIN	Minimum of all Y values in the series.	All	=Min(Fields!MyDataField.Value)
+#MAX	Maximum of all Y values in the series.	All	=Max(Fields!MyDataField.Value)
+#FIRST	First of all Y values in the series.	All	=First(Fields!MyDataField.Value)
+
+From <https://docs.microsoft.com/en-us/sql/reporting-services/report-design/formatting-data-points-on-a-chart-report-builder-and-ssrs?view=sql-server-2017> 
+
+
+BrightPastel: color palette colours 418CF0,FCB441,DF3A02,056492,BFBFBF,1A3B69,FFE382,129CDD,CA6B4B,005CDB,F3D288,506381,F1B9A8,E0830A,7893BE
+
+From <https://stackoverflow.com/questions/14204827/ms-chart-for-net-predefined-palettes-color-list> 
+TO ENTER IN SERIES LABEL PROPERTIES FILL!:
+=SWITCH(
+   Fields!ProgramServiceCode.Value = "ALTERNATE LEVEL OF CARE", "#418CF0"
+   , Fields!ProgramServiceCode.Value = "MEDICAL","#FCB441"
+   , Fields!ProgramServiceCode.Value = "PSYCHIATRY", "#DF3A02"
+   , Fields!ProgramServiceCode.Value = "SURGICAL", "#056492"
+   , Fields!ProgramServiceCode.Value = "REHABILITATION", "#BFBFBF"
+   , Fields!ProgramServiceCode.Value = "WITHDRAWAL & TREATMENT SERVICE", "#1A3B69"
+=Join(Parameters!appt.Label, ",")   - include multiple parameteres
+
+
+'End of Last Month (EOM)
+=DateAdd(DateInterval.Second, -1, DateSerial(Year(Date.Now), Month(Date.Now), 1))
+
+> 
