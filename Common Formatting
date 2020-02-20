@@ -1,0 +1,216 @@
+	 
+   IF OBJECT_ID('tempdb..#step1') IS NOT NULL
+DROP TABLE #step1
+
+
+Declare @startdate datetime = '2018-01-01'
+Declare @enddate datetime = '2018-01-31'
+
+   ,CASE 
+		WHEN MONTH(ptu.pt_unavl_from) >= 4
+			THEN ( CONCAT (YEAR(ptu.pt_unavl_from),'-',YEAR(ptu.pt_unavl_from) + 1))
+		ELSE ( CONCAT (YEAR(ptu.pt_unavl_from) - 1,'-',YEAR(ptu.pt_unavl_from)))
+		END AS fiscal_year
+	
+	CASE WHEN month(hd.DDt) > 3
+	THEN CAST(year(hd.DDt) AS char(4))  + '-' + RIGHT(CAST(year(hd.DDt) + 1 AS char(4)), 2) 
+	ELSE CAST(year(hd.DDt) - 1 AS char(4)) + '-' + RIGHT(CAST(year(hd.DDt) AS char(4)), 2) 
+	 END AS Fiscal_Year
+	
+		, CASE
+	         WHEN MONTH(ptu.pt_unavl_from) BETWEEN 7 AND 9 THEN 'Q2'
+	         WHEN MONTH(ptu.pt_unavl_from) BETWEEN 10 AND 12 THEN 'Q3'
+	         WHEN MONTH(ptu.pt_unavl_from) BETWEEN 1 AND 3 THEN 'Q4'
+	         WHEN MONTH(ptu.pt_unavl_from) BETWEEN 4 AND 6 THEN 'Q1'
+	     END AS quarter
+	
+	CASE WHEN month(hd.DDt) > 3
+	THEN CAST(year(hd.DDt) AS char(4))  + '-' + RIGHT(CAST(year(hd.DDt) + 1 AS char(4)), 2) 
+	ELSE CAST(year(hd.DDt) - 1 AS char(4)) + '-' + RIGHT(CAST(year(hd.DDt) AS char(4)), 2) 
+	 END AS Fiscal_Year
+	, CASE
+         WHEN MONTH(ptu.pt_unavl_from) BETWEEN 7 AND 9 THEN 'Q2'
+         WHEN MONTH(ptu.pt_unavl_from) BETWEEN 10 AND 12 THEN 'Q3'
+         WHEN MONTH(ptu.pt_unavl_from) BETWEEN 1 AND 3 THEN 'Q4'
+         WHEN MONTH(ptu.pt_unavl_from) BETWEEN 4 AND 6 THEN 'Q1'
+     END AS quarter
+	
+Case When Month(insert)<= 3 Then Month(insert)+12
+ELSE Month(insert) END as MonthSort,
+
+CONVERT(varchar(3), unavl_hdr.unavl_from, 100) as MonthName
+
+DATENAME(month,[Surgery Date]) as monthname
+
+CONVERT(varchar(3), unavl_hdr.unavl_from, 100) as MonthName
+convert(VARCHAR(10), bill_event.bill_event_date, 112) 
+
+GET PERCENTAGE: ,convert(decimal(5,2),(100 * convert(float,count(DaysPostOp))/convert(float,count(*)))) as test
+
+Datetime conversion 
+       CAST(LEFT([ADM.DEPE29],4) + '-' + 
+       SUBSTRING([ADM.DEPE29],5,2) + '-' + 
+       RIGHT([ADM.DEPE29],2) + 'T' +
+       LEFT([ADM.DEPE18],2) + ':' +
+       RIGHT([ADM.DEPE18],2) + ':00' AS DATETIME) AS LeftEDDateTime  
+
+
+
+SSRS DATE PARAMETER:
+="From "+format(Parameters!start.Value,"yyyy-MM-dd")+" To "+format(Parameters!end.Value,"yyyy-MM-dd")
+	
+	ROW_NUMBER() OVER(PARTITION BY patient_chart_number,visit_date,visit_time,body_region_code ORDER BY nhpip_code desc) as row
+	
+	Convert date 
+	  convert(VARCHAR(10), bill_event.bill_event_date, 112) 
+	  CONVERT(char(5), rh.TreatmentStartTime, 108 AS visit_time,
+ 
+	CONVERT(char(10), GetDate(),126)
+	
+	From <https://stackoverflow.com/questions/889629/how-to-get-a-date-in-yyyy-mm-dd-format-from-a-tsql-datetime-field> 
+	
+	
+	<style>body,.top-bar{margin-top:1.9em}</style> 
+	CONVERT(char(10), GetDate(),126)
+	
+	From <https://stackoverflow.com/questions/889629/how-to-get-a-date-in-yyyy-mm-dd-format-from-a-tsql-datetime-field> 
+	
+	
+	Get last 12 months and year to date as parameters:
+	
+	SELECT DISTINCT
+	       FiscalYear,
+	       CASE
+	           WHEN Month <= 3
+	           THEN Month + 12
+	           ELSE Month
+	       END AS MonthSort,
+	       MonthYear,
+	       MonthName
+	FROM [DSU_DM].[dbo].[d_Date]
+	WHERE MonthYear BETWEEN(DATEADD(Month, -12, GETDATE())) AND GETDATE()
+	
+	UNION
+	
+	SELECT distinct
+	       FiscalYear
+	       ,0 as MonthSort
+	       ,CASE
+	           WHEN(MONTH(MonthYear)>= 5)
+	           THEN DATEFROMPARTS(YEAR(MonthYear), 4, 1)
+	           ELSE DATEFROMPARTS(YEAR(MonthYear) - 1, 4, 1)
+	       END AS MonthYear
+	       ,case when (Month(MonthYear)>=5) then 'YTD' else 'Last YTD' end AS MonthName
+	FROM dsu_dm.dbo.d_Date
+	WHERE 
+	MonthYear = FORMAT(GETDATE(), 'MMMyyyy')
+	--MonthYear = 'May2019'
+	ORDER BY FiscalYear DESC,
+	         MonthSort DESC;  
+	
+	 
+	
+	
+	
+	
+	
+	
+	
+	-- Here are some newer versions of a some date calcs
+	 
+	declare @date datetime;
+	set @date=GetDate();
+	 
+	-- Set date to midnight (resets hours/mins/etc to zeroes)
+	select CONVERT(DateTime, FLOOR(CONVERT(FLOAT, getdate())))
+	 
+	-- midnight on the first day of this month
+	SELECT CONVERT(DateTime, FLOOR(CONVERT(FLOAT, DATEADD(dd,-(DAY(@date)-1),@date))));
+	 
+	-- midnight on the previous Sunday
+	SELECT CONVERT(DateTime, FLOOR(CONVERT(FLOAT, DATEADD(dd,-(DatePart(dw,@date)-1),@date))));
+	 
+	-- reset time to zeroes on a date/time field
+	select CONVERT(DateTime, FLOOR(CONVERT(FLOAT, getdate())))
+	 
+	 
+	 
+	 
+	--DECLARE @date DATETIME
+	--SELECT @date = getdate();
+	 
+	      SELECT CONVERT(DateTime, FLOOR(CONVERT(FLOAT, @date)))
+	 
+	 
+	SELECT CONVERT(DATETIME, FLOOR(CONVERT(FLOAT, dateAdd(dd, 1-datepart(dd,dateAdd(mm, -1, @date)), dateAdd(mm, -1, @date))))) as Date_Value,
+	'First Day of Previous Month'  AS Date_Type
+	UNION
+	SELECT CONVERT(DateTime,DATEADD(dd,-(DAY(@date)),@date),101) ,
+	'Last Day of Previous Month'
+	UNION
+	SELECT CONVERT(DateTime,DATEADD(dd,-(DAY(@date)-1),@date),101),
+	'First Day of Current Month' AS Date_Type
+	UNION
+	SELECT CONVERT(DateTime,@date,101) AS Date_Value, 'Today'
+	UNION
+	SELECT CONVERT(DateTime,DATEADD(dd,-(DAY(DATEADD(mm,1,@date))),DATEADD(mm,1,@date)),101) ,
+	'Last Day of Current Month'
+	UNION
+	SELECT CONVERT(DateTime,DATEADD(dd,-(DAY(DATEADD(mm,1,@date))-1),DATEADD(mm,1,@date)),101) ,
+	'First Day of Next Month'
+	UNION
+	SELECT CONVERT(DateTime,DATEADD(dd,-(DAY(@date)-1),@date),101),
+	'First Day of Current Month' AS Date_Type
+	UNION
+	select dateadd(dd,-(datepart(dw,@date)-1),FLOOR(CONVERT(FLOAT, @date))),
+	'Previous Sunday'
+	UNION
+	SELECT DATEADD(qq,DATEDIFF(qq,0,GETDATE()),0) as FirstDayOfQuarter, 
+	'First day of current quarter'
+	UNION
+	SELECT DATEADD(qq,DATEDIFF(qq,-1,GETDATE()),-1) as LastDayOfQuarter,
+	'Last day of current quarter'
+	UNION
+	SELECT DATEADD(qq,DATEDIFF(qq,0,GETDATE())-2,0) as FirstDayOfLastQuarter,
+	'First day of LAST quarter'
+	UNION
+	SELECT DATEADD(qq,DATEDIFF(qq,-1,GETDATE())-1,-1) as FirstDayOfLastQuarter,
+	'Last day of LAST quarter'
+	GO
+	-- Rounding to the second
+	select @dtVariable as Original,
+	       DATEADD(ms, 500 - DATEPART(ms, @dtVariable + '00:00:00.500'),
+	               @dtVariable) as RoundedToSecond;
+	 
+	-- Truncated to the minute
+	select @dtVariable as Original,
+	       DATEADD(minute, DATEDIFF(minute, 0, @dtVariable), 0) as TruncatedToMinute;
+	 
+	-- Rounded to minute
+	select @dtVariable as Original,
+	       DATEADD(minute, DATEDIFF(minute, 0,
+	             DATEADD(second, 30 - DATEPART(second, @dtVariable + '00:00:30.000'),
+	             @dtVariable)), 0) as RoundedToMinute;
+	 
+	-- Truncated to the hour
+	select @dtVariable as Original,
+	       DATEADD(hour, DATEDIFF(hour, 0, @dtVariable), 0) as TruncatedToHour;
+	 
+	-- Rounded to hour
+	select @dtVariable as Original,
+	       DATEADD(hour, DATEDIFF(hour, 0,
+	             DATEADD(minute, 30 - DATEPART(minute, @dtVariable + '00:30:00.000'),
+	             @dtVariable)), 0)  as RoundedToHour;
+	 
+	-- Truncated to the day
+	select @dtVariable as Original,
+	       DATEADD(Day, DATEDIFF(Day, 0, @dtVariable), 0) as TruncatedToDay;
+	 
+	-- Rounded to day
+	select @dtVariable as Original,
+	       DATEADD(day, DATEDIFF(day, 0,
+	             DATEADD(hour, 12 - DATEPART(hour, @dtVariable + '12:00:00.000'),
+	             @dtVariable)), 0)  as RoundedToDay;
+	
+
+From <http://stevestedman.com/2012/10/tsql-rounding-datetime-to-nearest-seconds/> 
